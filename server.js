@@ -1,11 +1,11 @@
-const express = require("express");
-const path = require("path");
+var express = require("express");
+var path = require("path");
 const fs = require("fs");
 const { nanoid } = require("nanoid");
 
-const app = express();
+var app = express();
 
-const PORT = process.env.PORT || 8080;
+var PORT = process.env.PORT || 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -27,14 +27,14 @@ app.post("/api/notes", function (req, res) {
         id: nanoid(),
     };
 
-    fs.readFile(__dirname + "/db/db.json", "UTF8", (err, data) => {
+    fs.readFile(__dirname + "/db/db.json", "utf8", (err, data) => {
         if (err) throw error;
 
-        let databaseNotes = JSON.parse(data);
-        databaseNotes.push(newNote);
-        console.log(databaseNotes);
-        fs.writeFileSync(__dirname + "/db/db.json", JSON.stringify(databaseNotes));
-        res.json(databaseNotes);
+        let allNotes = [JSON.parse(data)];
+        allNotes.push(newNote);
+        console.log(allNotes);
+        fs.writeFileSync(__dirname + "/db/db.json", JSON.stringify(allNotes));
+        res.json(allNotes);
     })
 });
 
@@ -44,9 +44,9 @@ app.delete("/api/notes/:id", function (req, res) {
     let newDataList = JSON.parse(fs.readFileSync(__dirname + "/db/db.json"))
     noteArray = newDataList;
 
-    const noteID = req.params.id;
-    console.log(noteID);
-    noteArray = noteArray.filter(({ id }) => id !== noteID)
+    const noteId = req.params.id;
+    console.log(noteId);
+    noteArray = noteArray.filter(({ id }) => id !== noteId)
     // const noteToDelete = req.params.id;
     // fs.readFile(__dirname + "/db/db.json", "UTF8", (err, data) => {
     //     if (err) throw error;
